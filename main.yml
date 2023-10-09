@@ -1,0 +1,90 @@
+---
+- name: Запуск 
+  hosts: Subsquid
+  become: yes
+  tasks: 
+        
+    - name: Вывод значения переменной VarsKey
+      debug:
+        var: VarsKey 
+    - name: Вывод значения переменной exercise
+      debug:
+        var: exercise
+  
+
+#    - name: Устанавливаем Nodejs и Docker
+#      include_tasks: nodejs.yml
+#      when: VarsKey == "singleProc.key"
+
+    - name: Разделение значения exercise
+      set_fact:
+        first_word: "{{ exercise.split('-')[0] }}"
+
+    - name: Инициализация проекта
+      command: "sqd init my-{{ exercise }} -t https://github.com/subsquid-quests/{{ first_word }}-chain-squid"
+
+    - name: Копирование файла
+      copy:
+        src: "{{ pathSqd }}{{ VarsKey  }}"
+        dest: "/root/my-{{ exercise }}/query-gateway/keys/"
+        mode: "0755"
+      become: yes
+
+
+    - name: Выполнить "sqd up"
+      become_user: root
+      command: sqd up
+      args:
+        chdir: /root/my-{{ exercise }}
+
+    - name: Выполнить "npm ci"
+      become_user: root
+      command: npm ci
+      args:
+        chdir: /root/my-{{ exercise }}
+
+    - name: Выполнить "sqd build"
+      become_user: root
+      command: sqd build
+      args:
+        chdir: /root/my-{{ exercise }}
+
+    - name: Выполнить "sqd migration:apply"
+      become_user: root
+      command: sqd migration:apply
+      args:
+        chdir: /root/my-{{ exercise }}
+
+    - name: Выполнить "sqd run ."
+      async: 1800 
+      poll: 0 
+      become_user: root
+      command: sqd run .
+      args:
+        chdir: /root/my-{{ exercise }}
+
+#-----------------------------------------------------------------------
+    - name: Поставить паузу на 30 минут
+      pause:
+        seconds: 1800  # Время паузы в секундах (30 минут)
+
+    - name: Выполнить "sqd down"
+      become_user: root
+      command: sqd down
+      args:
+        chdir: /root/my-{{ exercise }}
+
+
+
+
+
+
+
+#    - name: Запуск и перезагрузка 
+#      include_tasks: subsquid_trouble.yml
+#      vars:
+#        exercise: "{{ exercise }}"
+#      loop: "{{ range(5) }}"
+#      loop_control:
+#        pause: 600  # Пауза в секундах (10 минут)
+
