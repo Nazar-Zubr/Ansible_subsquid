@@ -1,0 +1,11 @@
+---
+- name: Запуск 
+  hosts: Subsquid
+  become: yes
+  tasks: 
+
+    - name: Выполнить "sqd down"
+      become_user: root
+      command: sqd down
+      args:
+        chdir: /root/my-{{ exercise }}

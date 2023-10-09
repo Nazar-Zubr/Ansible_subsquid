@@ -1,0 +1,25 @@
+---
+- name: Установка nodejs и docker
+  hosts: all
+  become: yes
+  tasks:
+    - name: Установка Docker
+      shell: curl -s https://raw.githubusercontent.com/razumv/helpers/main/tools/install_docker.sh | bash
+      ignore_errors: yes
+
+    - name: Установка Node.js
+      shell: curl -s https://raw.githubusercontent.com/DOUBLE-TOP/tools/main/node.sh | bash
+      ignore_errors: yes
+
+    - name: Установка @subsquid/cli
+      shell: npm install --global @subsquid/cli@latest
+
+    - name: Проверка версии @subsquid/cli
+      command: sqd --version
+      register: sqd_version_output
+
+    - name: Проверка вывода версии
+      assert:
+        that: "'@subsquid/cli/2.5.0 linux-x64 node-v18.17.1' in sqd_version_output.stdout"
+        success_msg: "Версия @subsquid/cli соответствует ожиданиям"
+        fail_msg: "Версия @subsquid/cli не соответствует ожиданиям"

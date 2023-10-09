@@ -1,0 +1,58 @@
+---
+- name: Это подплейбук
+  hosts: Subsquid
+  become: yes
+  tasks:
+
+    - name: Вывод значения переменной VarsKey
+      debug:
+        var: exercise
+
+#    - name: Выполнить "sqd down"
+#      become_user: root
+#      command: sqd down
+#      args:
+#        chdir: /root/my-{{ exercise }}
+
+    - name: Выполнить "sqd up"
+      become_user: root
+      command: sqd up
+      args:
+        chdir: /root/my-{{ exercise }}
+
+    - name: Выполнить "npm ci"
+      become_user: root
+      command: npm ci
+      args:
+        chdir: /root/my-{{ exercise }}
+
+    - name: Выполнить "sqd build"
+      become_user: root
+      command: sqd build
+      args:
+        chdir: /root/my-{{ exercise }}
+
+    - name: Выполнить "sqd migration:apply"
+      become_user: root
+      command: sqd migration:apply
+      args:
+        chdir: /root/my-{{ exercise }}
+
+    - name: Выполнить "sqd run ."
+      async: 1800  
+      poll: 0 
+      become_user: root
+      command: sqd run .
+      args:
+        chdir: /root/my-{{ exercise }}
+
+    - name: Поставить паузу на 30 минут
+      pause:
+        seconds: 1800  # Время паузы в секундах (30 минут)
+
+    - name: Выполнить "sqd down"
+      become_user: root
+      command: sqd down
+      args:
+        chdir: /root/my-{{ exercise }}
+        
