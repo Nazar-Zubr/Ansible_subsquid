@@ -7,7 +7,7 @@ from .. import loader
 class SUBMod(loader.Module):
     """Модуль подписок на каналы.
            Commands: /sub.\n
-    ⚙️ By BENGAL & @pavlyxa_rezon\n"""
+    ⚙️ By BENGAL & @Kunanow\n"""
 
     strings = {"name": "BGL-SUBSCRIBE"}
     
@@ -16,7 +16,7 @@ class SUBMod(loader.Module):
 
     @loader.watcher()
     async def watcher(self, message):
-        if message.chat_id != -1002217728765:
+        if message.chat_id != -1004509625189:
             return
         try:
             if message.message.startswith("/sub"):
