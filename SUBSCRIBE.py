@@ -7,7 +7,7 @@ from .. import loader
 class SUBMod(loader.Module):
     """Модуль подписок на каналы.
            Commands: /sub.\n
-    ⚙️ By BENGAL & @Kunanow\n"""
+    ⚙️ By BENGAL & @katletnik\n"""
 
     strings = {"name": "BGL-SUBSCRIBE"}
     
